@@ -1,0 +1,66 @@
+openapi: "3.0.0"
+info:
+  title: User service DTOs
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    CreateUserDTO:
+      type: object
+      required:
+        - firstname
+        - surname
+        - position
+        - gitHubUrl
+      properties:
+        firstname:
+          type: string
+        surname:
+          type: string
+        position:
+          type: string
+        gitHubUrl:
+          type: string
+    SearchUserDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreateUserDTO'
+    UserDTO:
+      x-extra-annotation:
+        - '@SuperBuilder'
+      allOf:
+        - $ref: '#/components/schemas/CreateUserDTO'
+        - required:
+            - id
+            - createdOn
+            - updatedOn
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+            createdOn:
+              type: string
+              format: date-time
+            updatedOn:
+              type: string
+              format: date-time
+    UserReposDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        full_name:
+          type: string
+        language:
+          $ref: '#/components/schemas/languageData'
+    languageData:
+      title: Language
+      description: Language
+      type: object
+      additionalProperties:
+        type: integer
+
+    PageRequestDTO:
+      type: object

@@ -1,0 +1,459 @@
+---
+openapi: 3.0.3
+info:
+  version: 1.1.4
+  title: GitHub v3 REST API
+  description: GitHub's v3 REST API.
+tags:
+  - name: github-repos
+paths:
+  "/users/{username}/repos":
+    get:
+      summary: List repositories for a user
+      description: 'Lists public repositories for the specified user.'
+      tags:
+      - github-repos
+      operationId: repos/list-for-user
+      parameters:
+      - "$ref": "#/components/parameters/username"
+      - name: type
+        description: Can be one of `all`, `owner`, `member`.
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - all
+          - owner
+          - member
+          default: owner
+      - name: sort
+        description: Can be one of `created`, `updated`, `pushed`, `full_name`.
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - created
+          - updated
+          - pushed
+          - full_name
+          default: full_name
+      - name: direction
+        description: 'Can be one of `asc` or `desc`. Default: `asc` when using `full_name` otherwise `desc`'
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - "$ref": "#/components/parameters/per-page"
+      - "$ref": "#/components/parameters/page"
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/minimal-repository"
+          headers:
+            Link:
+              "$ref": "#/components/headers/link"
+  "/repos/{owner}/{repo}/languages":
+    get:
+      summary: List repository languages
+      description: Lists languages for the specified repository. The value shown for
+        each language is the number of bytes of code written in that language.
+      tags:
+        - github-repos
+      operationId: repos/list-languages
+      parameters:
+        - "$ref": "#/components/parameters/owner"
+        - "$ref": "#/components/parameters/repo"
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/language"
+components:
+  headers:
+    link:
+      schema:
+        type: string
+  parameters:
+    owner:
+      name: owner
+      in: path
+      required: true
+      schema:
+        type: string
+    repo:
+      name: repo
+      in: path
+      required: true
+      schema:
+        type: string
+    per-page:
+      name: per_page
+      description: Results per page (max 100)
+      in: query
+      schema:
+        type: integer
+        default: 30
+    page:
+      name: page
+      description: Page number of the results to fetch.
+      in: query
+      schema:
+        type: integer
+        default: 1
+    username:
+      name: username
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    language:
+      title: Language
+      description: Language
+      type: object
+      additionalProperties:
+        type: integer
+    minimal-repository:
+      title: Minimal Repository
+      description: Minimal Repository
+      type: object
+      properties:
+        id:
+          type: integer
+        node_id:
+          type: string
+        name:
+          type: string
+        full_name:
+          type: string
+        owner:
+          "$ref": "#/components/schemas/simple-user"
+        private:
+          type: boolean
+        html_url:
+          type: string
+          format: uri
+        description:
+          type: string
+        fork:
+          type: boolean
+        url:
+          type: string
+          format: uri
+        archive_url:
+          type: string
+        assignees_url:
+          type: string
+        blobs_url:
+          type: string
+        branches_url:
+          type: string
+        collaborators_url:
+          type: string
+        comments_url:
+          type: string
+        commits_url:
+          type: string
+        compare_url:
+          type: string
+        contents_url:
+          type: string
+        contributors_url:
+          type: string
+          format: uri
+        deployments_url:
+          type: string
+          format: uri
+        downloads_url:
+          type: string
+          format: uri
+        events_url:
+          type: string
+          format: uri
+        forks_url:
+          type: string
+          format: uri
+        git_commits_url:
+          type: string
+        git_refs_url:
+          type: string
+        git_tags_url:
+          type: string
+        git_url:
+          type: string
+        issue_comment_url:
+          type: string
+        issue_events_url:
+          type: string
+        issues_url:
+          type: string
+        keys_url:
+          type: string
+        labels_url:
+          type: string
+        languages_url:
+          type: string
+          format: uri
+        merges_url:
+          type: string
+          format: uri
+        milestones_url:
+          type: string
+        notifications_url:
+          type: string
+        pulls_url:
+          type: string
+        releases_url:
+          type: string
+        ssh_url:
+          type: string
+        stargazers_url:
+          type: string
+          format: uri
+        statuses_url:
+          type: string
+        subscribers_url:
+          type: string
+          format: uri
+        subscription_url:
+          type: string
+          format: uri
+        tags_url:
+          type: string
+          format: uri
+        teams_url:
+          type: string
+          format: uri
+        trees_url:
+          type: string
+        clone_url:
+          type: string
+        mirror_url:
+          type: string
+        hooks_url:
+          type: string
+          format: uri
+        svn_url:
+          type: string
+        homepage:
+          type: string
+        language:
+          type: string
+        forks_count:
+          type: integer
+        stargazers_count:
+          type: integer
+        watchers_count:
+          type: integer
+        size:
+          type: integer
+        default_branch:
+          type: string
+        open_issues_count:
+          type: integer
+        is_template:
+          type: boolean
+        topics:
+          type: array
+          items:
+            type: string
+        has_issues:
+          type: boolean
+        has_projects:
+          type: boolean
+        has_wiki:
+          type: boolean
+        has_pages:
+          type: boolean
+        has_downloads:
+          type: boolean
+        archived:
+          type: boolean
+        disabled:
+          type: boolean
+        visibility:
+          type: string
+        pushed_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        permissions:
+          type: object
+          properties:
+            admin:
+              type: boolean
+            maintain:
+              type: boolean
+            push:
+              type: boolean
+            triage:
+              type: boolean
+            pull:
+              type: boolean
+        temp_clone_token:
+          type: string
+        delete_branch_on_merge:
+          type: boolean
+        subscribers_count:
+          type: integer
+        network_count:
+          type: integer
+        license:
+          type: object
+          properties:
+            key:
+              type: string
+            name:
+              type: string
+            spdx_id:
+              type: string
+            url:
+              type: string
+            node_id:
+              type: string
+        forks:
+          type: integer
+        open_issues:
+          type: integer
+        watchers:
+          type: integer
+        allow_forking:
+          type: boolean
+      required:
+      - archive_url
+      - assignees_url
+      - blobs_url
+      - branches_url
+      - collaborators_url
+      - comments_url
+      - commits_url
+      - compare_url
+      - contents_url
+      - contributors_url
+      - deployments_url
+      - description
+      - downloads_url
+      - events_url
+      - fork
+      - forks_url
+      - full_name
+      - git_commits_url
+      - git_refs_url
+      - git_tags_url
+      - hooks_url
+      - html_url
+      - id
+      - node_id
+      - issue_comment_url
+      - issue_events_url
+      - issues_url
+      - keys_url
+      - labels_url
+      - languages_url
+      - merges_url
+      - milestones_url
+      - name
+      - notifications_url
+      - owner
+      - private
+      - pulls_url
+      - releases_url
+      - stargazers_url
+      - statuses_url
+      - subscribers_url
+      - subscription_url
+      - tags_url
+      - teams_url
+      - trees_url
+      - url
+    simple-user:
+      title: Simple User
+      description: Simple User
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        login:
+          type: string
+        id:
+          type: integer
+        node_id:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        gravatar_id:
+          type: string
+        url:
+          type: string
+          format: uri
+        html_url:
+          type: string
+          format: uri
+        followers_url:
+          type: string
+          format: uri
+        following_url:
+          type: string
+        gists_url:
+          type: string
+        starred_url:
+          type: string
+        subscriptions_url:
+          type: string
+          format: uri
+        organizations_url:
+          type: string
+          format: uri
+        repos_url:
+          type: string
+          format: uri
+        events_url:
+          type: string
+        received_events_url:
+          type: string
+          format: uri
+        type:
+          type: string
+        site_admin:
+          type: boolean
+        starred_at:
+          type: string
+      required:
+      - avatar_url
+      - events_url
+      - followers_url
+      - following_url
+      - gists_url
+      - gravatar_id
+      - html_url
+      - id
+      - node_id
+      - login
+      - organizations_url
+      - received_events_url
+      - repos_url
+      - site_admin
+      - starred_url
+      - subscriptions_url
+      - type
+      - url

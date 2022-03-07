@@ -1,0 +1,148 @@
+openapi: "3.0.0"
+info:
+  title: User service Apis
+  version: 1.0.0
+tags:
+  - users
+  - user-repos
+paths:
+  /users/{id}:
+    get:
+      summary: Get User by id
+      operationId: getUserById
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: User as response
+          content:
+            application/json:
+              schema:
+                $ref: 'users-dtos.yaml#/components/schemas/UserDTO'
+    delete:
+      summary: Delete User by id
+      operationId: deleteUserById
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: User as response
+          content:
+            application/json:
+              schema:
+                type: boolean
+    patch:
+      operationId: patch
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              type: Patch
+        required: true
+      responses:
+        200:
+          description: Response
+          content:
+            application/json:
+              schema:
+                $ref: 'users-dtos.yaml#/components/schemas/UserDTO'
+  /users:
+    post:
+      summary: create User by
+      operationId: create
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'users-dtos.yaml#/components/schemas/CreateUserDTO'
+        required: true
+      responses:
+        200:
+          description: User as response
+          content:
+            application/json:
+              schema:
+                $ref: 'users-dtos.yaml#/components/schemas/UserDTO'
+  /users/search:
+    post:
+      summary: Search endpoint for Users
+      operationId: search
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: PageRequestDtoOfUser
+        required: true
+      responses:
+        200:
+          description: Response
+          content:
+            application/json:
+              schema:
+                $ref: PageOfUser
+  /users/{id}/repositories:
+    get:
+      summary: Get User' Repositoris by id
+      operationId: getUserReposById
+      tags:
+        - users-repos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: User as response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'users-dtos.yaml#/components/schemas/UserReposDTO'
+                
+components:
+  schemas:
+    Patch:
+      type: object
+    PageRequestDtoOfUser:
+      type: object
+      properties:
+        content:
+          $ref: 'users-dtos.yaml#/components/schemas/SearchUserDTO'
+    PageOfUser:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: 'users-dtos.yaml#/components/schemas/UserDTO'

@@ -1,0 +1,10 @@
+logging:
+  level:
+    root: INFO
+
+basic:
+  auth:
+    github:
+      token-uri: http://localhost:8083
+      username: ABC
+      password: 123456
